@@ -12,7 +12,7 @@
 
 from abstract_api import MODE_STREAM, AbstractAPI, AbstractStream
 from datetime import datetime
-from . import tdSec, secTd, setSyncTime, syncTime, unescapeEntities, Timezone, APIException, SettEntry
+from . import tdSec, secTd, setSyncTime, syncTime, unescapeEntities, Timezone, APIException
 
 
 class KartinaAPI(AbstractAPI):
@@ -54,7 +54,7 @@ class KartinaAPI(AbstractAPI):
 			elif s.find('list'):
 				valist = [x.text for x in s.find('list')]
 
-			self.settings[s.tag] = SettEntry(s.tag, value, vallist)
+			self.settings[s.tag] = {'id':s.tag, 'value':value, 'vallist':vallist}
 		for x in self.settings.values():
 			self.trace(x)
 		
@@ -132,7 +132,7 @@ class e2iptv(KartinaAPI, AbstractStream):
 			t = int(e.findtext('epg_end').encode("utf-8"))
 			t_end = datetime.fromtimestamp(t)
 			txt = e.findtext('epg_progname').encode('utf-8')
-			yield ({'text':txt, 'start':t_start, 'end':t_end})
+			yield ({'id':cid,'text':txt, 'start':t_start, 'end':t_end})
 	
 	def on_getDayEpg(self, cid, date):
 		params = {"day" : date.strftime("%d%m%y"), "cid" : cid}
@@ -148,6 +148,6 @@ class e2iptv(KartinaAPI, AbstractStream):
 	
 	def pushSettings(self, sett):
 		for x in sett:
-			params = {"var" : x[0],
+			params = {"var" : x[0]['id'],
 			          "val" : x[1]}
-			self.getData(self.site+"/xml/settings_set?", params, "setting %s" % x[0])
+			self.getData(self.site+"/xml/settings_set?", params, "setting %s" % x[0]['id'])
