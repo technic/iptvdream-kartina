@@ -74,10 +74,11 @@ class e2iptv(KartinaAPI, AbstractStream):
 		AbstractStream.__init__(self)
 
 	def on_channelEpgCurrent(self, channel):
-		txt = channel.findtext("epg_progname").encode("utf-8")
-		start = datetime.fromtimestamp(int(channel.findtext("epg_start").encode("utf-8")))
-		end = datetime.fromtimestamp(int(channel.findtext("epg_end").encode("utf-8")))
-		if txt and end: yield ({"text":txt,"start":start,"end":end})
+		if channel.findtext("epg_progname") and channel.findtext("epg_end"):
+			txt = channel.findtext("epg_progname").encode("utf-8")
+			start = datetime.fromtimestamp(int(channel.findtext("epg_start").encode("utf-8")))
+			end = datetime.fromtimestamp(int(channel.findtext("epg_end").encode("utf-8")))
+			yield ({"text":txt,"start":start,"end":end})
 
 	
 	def on_setChannelsList(self):
