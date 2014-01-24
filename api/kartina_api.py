@@ -55,8 +55,6 @@ class KartinaAPI(AbstractAPI):
 				valist = [x.text for x in s.find('list')]
 
 			self.settings[s.tag] = {'id':s.tag, 'value':value, 'vallist':vallist}
-		for x in self.settings.values():
-			self.trace(x)
 		
 		self.trace("Packet expire: %s" % self.packet_expire)
 		self.sid = True
@@ -97,7 +95,7 @@ class e2iptv(KartinaAPI, AbstractStream):
 				id           = int(channel.findtext("id").encode("utf-8"))
 				name         = channel.findtext("name").encode("utf-8")
 				has_archive  = channel.findtext("have_archive") or 0
-				is_protected = False
+				is_protected = channel.findtext("protected") or 0
 				yield ({"id":id,
 						"group_id":group_id,
 						"group_name":group_name,
