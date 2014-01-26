@@ -20,7 +20,7 @@ class KartinaAPI(AbstractAPI):
 	iProvider = "kartinatv"
 	NUMBER_PASS = True
 	
-	site = "http://iptv.kartina.tv/api"
+	site = "http://iptv.kartina.tv"
 	
 	def __init__(self, username, password):
 		AbstractAPI.__init__(self, username, password)
@@ -32,7 +32,7 @@ class KartinaAPI(AbstractAPI):
 		self.trace("Authorization started")
 		self.trace("username = %s" % self.username)
 		params = {"login" : self.username, "pass" : self.password, "settings" : "all"}
-		reply = self.getXmlData(self.site+'/xml/login?', params, 'authorize', 1)
+		reply = self.getXmlData(self.site+'/api/xml/login?', params, 'authorize', 1)
 
 		if reply.find("error"):
 			raise APIException(reply.find('error').findtext('message'))
@@ -80,7 +80,7 @@ class e2iptv(KartinaAPI, AbstractStream):
 
 	
 	def on_setChannelsList(self):
-		root = self.getXmlData(self.site+"/xml/channel_list?", {}, "channels list")
+		root = self.getXmlData(self.site+"/api/xml/channel_list?", {}, "channels list")
 		try:
 			setSyncTime(datetime.fromtimestamp(int(root.findtext("servertime").encode("utf-8"))))
 		except:
@@ -107,7 +107,7 @@ class e2iptv(KartinaAPI, AbstractStream):
 
 	def setTimeShift(self, timeShift):
 		params = {"var":"timeshift", "val":timeShift}
-		self.getData(self.site+"/xml/settings_set?", params, "time shift new api %s" % timeShift) 
+		self.getData(self.site+"/api/xml/settings_set?", params, "time shift new api %s" % timeShift) 
 
 	def on_getStreamUrl(self, cid, pin, time = None):
 		params = {"cid" : cid}
@@ -115,14 +115,14 @@ class e2iptv(KartinaAPI, AbstractStream):
 			params["gmt"] = time.strftime("%s")
 		if pin:
 			params["protect_code"] = pin
-		root = self.getXmlData(self.site+"/xml/get_url?", params, "URL of stream %s" % cid)
+		root = self.getXmlData(self.site+"/api/xml/get_url?", params, "URL of stream %s" % cid)
 		url = root.findtext("url").encode("utf-8").split(' ')[0].replace('http/ts://', 'http://')
 		if url == "protected": return self.ACCESS_DENIED
 		return url
 	
 	def on_getChannelsEpg(self, cids):
 		params = {"cids" : ",".join(map(str, cids))}
-		root = self.getXmlData(self.site+"/xml/epg_current?", params, "getting epg of cids = %s" % cids)
+		root = self.getXmlData(self.site+"/api/xml/epg_current?", params, "getting epg of cids = %s" % cids)
 		for channel in root.find('epg'):
 			cid = int(channel.findtext("cid").encode("utf-8"))
 			e = channel.find("epg")
@@ -135,7 +135,7 @@ class e2iptv(KartinaAPI, AbstractStream):
 	
 	def on_getDayEpg(self, cid, date):
 		params = {"day" : date.strftime("%d%m%y"), "cid" : cid}
-		root = self.getXmlData(self.site+"/xml/epg?", params, "day EPG for channel %s" % cid)
+		root = self.getXmlData(self.site+"/api/xml/epg?", params, "day EPG for channel %s" % cid)
 		for program in root.find('epg'):
 			t = int(program.findtext("ut_start").encode("utf-8"))
 			t_start= datetime.fromtimestamp(t)
@@ -149,4 +149,4 @@ class e2iptv(KartinaAPI, AbstractStream):
 		for x in sett:
 			params = {"var" : x[0]['id'],
 			          "val" : x[1]}
-			self.getData(self.site+"/xml/settings_set?", params, "setting %s" % x[0]['id'])
+			self.getData(self.site+"/api/xml/settings_set?", params, "setting %s" % x[0]['id'])

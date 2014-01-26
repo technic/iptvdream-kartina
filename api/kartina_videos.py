@@ -38,7 +38,7 @@ class e2iptv(KartinaAPI):
 				  "genre" : "|".join(genre) }
 		if stype == 'text':
 			params['query'] = query
-		root = self.getXmlData(self.site+"/xml/vod_list?", params, "getting video list by type %s" % stype)
+		root = self.getXmlData(self.site+"/api/xml/vod_list?", params, "getting video list by type %s" % stype)
 		videos_count = int(root.findtext('total'))
 		
 		self.currentPageIds = []
@@ -61,7 +61,7 @@ class e2iptv(KartinaAPI):
 	
 	def getVideoInfo(self, vid):
 		params = {"id": vid}
-		root = self.getXmlData(self.site+"/xml/vod_info?", params, "video info %s" % vid)
+		root = self.getXmlData(self.site+"/api/xml/vod_info?", params, "video info %s" % vid)
 		v = root.find('film')
 		name = v.findtext('name').encode('utf-8')
 		video = Video(name)
@@ -107,11 +107,11 @@ class e2iptv(KartinaAPI):
 	
 	def getVideoUrl(self, fid):
 		params = {"fileid" : fid}
-		root = self.getXmlData(self.site+"/xml/vod_geturl?", params, "getting video url %s" % fid)
+		root = self.getXmlData(self.site+"/api/xml/vod_geturl?", params, "getting video url %s" % fid)
 		return root.find('url').text.encode('utf-8').split(' ')[0]
 	
 	def getVideoGenres(self):
-		root = self.getXmlData(self.site+"/xml/vod_genres?", {}, "getting genres list")		
+		root = self.getXmlData(self.site+"/api/xml/vod_genres?", {}, "getting genres list")		
 		self.video_genres = []
 		for genre in root.find('genres'):
 			self.video_genres += [{"id": genre.findtext('id'), "name": genre.findtext('name').encode('utf-8')}]

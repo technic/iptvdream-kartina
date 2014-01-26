@@ -1,5 +1,5 @@
 Package: enigma2-plugin-extensions-e2iptv-kartina
-Version: 2.1.5
+Version: 2.1.6
 Depends: enigma2-plugin-extensions-e2iptv (>= 2.1.8)
 Description: enigma2 iptv kartina player
 Section: extra
