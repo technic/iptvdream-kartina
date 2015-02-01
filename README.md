@@ -1,4 +1,4 @@
-iptvdream-kartina
+IPtvDream-kartina
 ==============
 
 KartinaTV api for iptvdream enigma2 plugin
