@@ -1,9 +1,9 @@
-Package: enigma2-plugin-extensions-e2iptv-kartina
-Version: 2.1.6
-Depends: enigma2-plugin-extensions-e2iptv (>= 2.1.8)
-Description: enigma2 iptv kartina player
+Package: enigma2-plugin-extensions-iptvdream-kartina
+Version:
+Depends: enigma2-plugin-extensions-iptvdream (>= 2.1.8)
+Description: enigma2 iptvdream kartina player
 Section: extra
 Priority: optional
-Maintainer: Alex Revetchi <alex.revetchi@gmail.com>
+Maintainer: Alex Maystrenko <alexeytech@gmail.com>
 License: GNU GPLv2
-Architecture: all
+Architecture:

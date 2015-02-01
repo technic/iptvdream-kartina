@@ -10,6 +10,8 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
+VERSION = "2.3.5"
+
 from abstract_api import MODE_STREAM, AbstractAPI, AbstractStream
 from datetime import datetime
 from . import tdSec, secTd, setSyncTime, syncTime, unescapeEntities, Timezone, APIException
@@ -23,7 +25,7 @@ class KartinaAPI(AbstractAPI):
 	site = "http://iptv.kartina.tv"
 	
 	def __init__(self, username, password):
-		AbstractAPI.__init__(self, username, password)
+		AbstractAPI.__init__(self, username, password, VERSION)
 
 	def start(self):
 		self.authorize()

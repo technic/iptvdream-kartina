@@ -1,5 +1,9 @@
 *.py[cod]
 
+# iptvdream build
+build-*/
+src
+
 # C extensions
 *.so
 
